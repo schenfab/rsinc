@@ -80,7 +80,7 @@ parser.add_argument(
     "-c", "--clean", action="store_true", help="Clean directories"
 )
 parser.add_argument(
-    "-D", "--default", help="Sync defaults", action="store_true"
+    "-D", "--default", default=True, help="Sync defaults", action="store_true"
 )
 parser.add_argument(
     "-r", "--recovery", action="store_true", help="Enter recovery mode"
