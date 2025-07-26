@@ -87,35 +87,22 @@ def lsl(path, hash_name):
     """
     global track
 
-    command = ["rclone", "lsjson", "-R", "--files-only", path]
+    command = ["rclone", "lsjson", "-R", "--no-mimetype", "--fast-list", "--files-only", path]
     subprocess.run(["rclone", "mkdir", path])
     result = subprocess.Popen(
         command + track.rclone_flags, stdout=subprocess.PIPE
     )
     list_of_dicts = ujson.load(result.stdout)
 
-    command = ["rclone", "hashsum", hash_name, path]
-    result = subprocess.Popen(command, stdout=subprocess.PIPE)
-    hashes = {}
-
-    for file in result.stdout:
-        decode = file.decode(RCLONE_ENCODING).strip()
-        tmp = decode.split("  ", 1)
-        hashes[tmp[1]] = tmp[0]
-
     out = Flat(path)
     for d in list_of_dicts:
+        name = d["Path"]
         time = strtotimestamp(d["ModTime"])
-        hashsize = str(d["Size"])
+        size = str(d["Size"])
 
-        hash = hashes.get(d["Path"], None)
-        if hash is not None:
-            hashsize += hash
-        else:
-            print(red("ERROR:"), "can't find", d["Path"], "hash")
-            continue
+        uid = size + "." + str(time)
 
-        out.update(d["Path"], hashsize, time)
+        out.update(name, uid, time)
 
     return out
 
