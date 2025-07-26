@@ -25,8 +25,6 @@ CONFIG_FILE = os.path.expanduser("~/.rsinc/config.json")  # Default config path
 
 custom_fig = Figlet(font="graffiti")
 print(custom_fig.renderText("Rsinc"))
-print("Copyright 2019 C. J. Williams (CHURCHILL COLLEGE)")
-print("This is free software with ABSOLUTELY NO WARRANTY")
 
 
 def qt(string):
@@ -238,7 +236,8 @@ def main():
         rmt_regexs, lcl_regexs, plain = build_regexs(
             BASE_L, BASE_R, path_lcl, ignores
         )
-        print("Ignore:", plain)
+        if plain:
+            print("Ignore:", plain)
 
         # Scan directories.
         SPIN.start(("Crawling: ") + qt(folder))
